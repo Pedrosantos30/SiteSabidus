@@ -4,13 +4,16 @@ import $ from 'jquery';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min'; 
 import Navbar from '../components/Navbar';
+import PostForm from '../components/PostForm'; 
+import { useAuth } from '../context/AuthContext';
+
 
 const Home = () => {
-  const navigate = useNavigate(); // Inicializando o hook useNavigate
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const navigate = useNavigate();
   const [currentUser, setCurrentUser] = useState(null);
   const [userVotes, setUserVotes] = useState({});
   const [posts, setPosts] = useState([]);
+  const {user, login, logout} = useAuth();
 
   const initialPosts = [
     {
@@ -66,33 +69,19 @@ const Home = () => {
   }, []);
 
   const updateLoginStatus = () => {
-    if (isLoggedIn) {
+    if (user) {
       $('#login-nav-item, #register-nav-item').addClass('d-none');
       $('#logout-nav-item').removeClass('d-none');
-      $('#new-post-form').show();
       $('#login-message').hide();
       $('.locked-action').removeClass('locked-action');
     } else {
       $('#login-nav-item, #register-nav-item').removeClass('d-none');
       $('#logout-nav-item').addClass('d-none');
-      $('#new-post-form').hide();
       $('#login-message').show();
       $('.post-actions a').addClass('locked-action');
     }
   };
 
-  const handleLogin = () => {
-    setIsLoggedIn(true);
-    setCurrentUser("Usuario123");
-    updateLoginStatus();
-  };
-
-  const handleLogout = () => {
-    setIsLoggedIn(false);
-    setCurrentUser(null);
-    setUserVotes({});
-    updateLoginStatus();
-  };
 
   const formatDate = (dateString) => {
     const options = { year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric' };
@@ -114,7 +103,7 @@ const Home = () => {
   };
 
   const votePost = (postId) => {
-    if (!isLoggedIn) {
+    if (!user) {
       alert("Você precisa estar logado para votar em um post!");
       return; // Retorna para evitar que o código abaixo seja executado
     }
@@ -175,27 +164,14 @@ const Home = () => {
 
   return (
     <div className="container">
-
-<Navbar isLoggedIn={isLoggedIn} handleLogout={handleLogout} /> 
-  
-
-
-
+      <Navbar /> 
       <h1 className="mb-4">Bem-vindo ao nosso fórum de discussões!</h1>
-      <p id="login-message" className="alert alert-info" style={{ display: isLoggedIn ? 'none' : 'block' }}>
+      <p id="login-message" className="alert alert-info" style={{ display: user ? 'none' : 'block' }}>
         Por favor, faça login para interagir com os posts.
       </p>
 
-      <form id="new-post-form" onSubmit={(e) => { e.preventDefault(); addPost(e.target.title.value, e.target.content.value); e.target.reset(); }} style={{ display: isLoggedIn ? 'block' : 'none' }}>
-        <h3>Criar um novo post</h3>
-        <div className="mb-3">
-          <input type="text" name="title" className="form-control" placeholder="Título" required />
-        </div>
-        <div className="mb-3">
-          <textarea name="content" className="form-control" placeholder="Conteúdo" required></textarea>
-        </div>
-        <button type="submit" className="btn btn-success">Publicar</button>
-      </form>
+      {/* Usando o PostForm */}
+      {user && <PostForm user={user} addPost={addPost}  />} {/* O formulário só será exibido se o usuário estiver logado */}
 
       <h2 className="mt-5">Posts Recentes</h2>
       <div className="posts-list">

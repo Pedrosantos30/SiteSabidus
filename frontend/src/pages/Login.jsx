@@ -2,25 +2,31 @@
 import React, { useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '@fortawesome/fontawesome-free/css/all.min.css';
-import { loginUser } from '../service/api'; // Importando a função de login
+import { useAuth } from '../context/AuthContext';
+import { useNavigate } from 'react-router-dom';
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-
+  const {user, login, logout} = useAuth();
+  const navigate = useNavigate();
   const handleSubmit = async (e) => {
     e.preventDefault();
     const credentials = { email, senha: password };
 
     try {
-      const response = await loginUser(credentials); // Chamando a função de login
-      console.log('Usuário logado:', response.data); // Aqui você pode armazenar os dados do usuário ou token, se necessário
+      login(true);
+    
+
+       // Aqui você pode armazenar os dados do usuário ou token, se necessário
 
       // Aqui, você pode armazenar um token de autenticação, se sua API retornar um
       // localStorage.setItem('token', response.data.token);
 
+
+
       alert('Login bem-sucedido! Redirecionando para a página principal...');
-      window.location.href = '/home'; // Redirecionando após o login
+      navigate("/");
     } catch (error) {
       console.error('Erro ao fazer login:', error);
       alert('Falha no login. Verifique suas credenciais e tente novamente.');

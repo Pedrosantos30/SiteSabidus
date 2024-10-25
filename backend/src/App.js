@@ -1,10 +1,10 @@
 const express = require("express");
 const mongoose = require("mongoose");
-const cors = require("cors"); // Importa o pacote cors
+const cors = require("cors");
 require('dotenv').config();
 
 const app = express();
-app.use(cors()); // Isso habilita o CORS para todas as rotas
+app.use(cors());
 app.use(express.json());
 
 const dbURI = process.env.MONGO_URI;

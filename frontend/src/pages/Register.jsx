@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { FaBrain } from 'react-icons/fa';
 import { registerUser } from '../service/api';
+import { useNavigate } from 'react-router-dom';
 
 function Register() {
   const [username, setUsername] = useState('');
@@ -12,6 +13,7 @@ function Register() {
   const [disciplina, setDisciplina] = useState('');
   const [periodo, setPeriodo] = useState('');
   const [tipoUsuario, setTipoUsuario] = useState('');
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -34,7 +36,7 @@ function Register() {
     try {
       await registerUser(userData);
       alert('Registro bem-sucedido! Redirecionando para a página de login...');
-      window.location.href = '/login';
+      navigate('/login');
     } catch (error) {
       console.error('Erro ao registrar:', error);
       alert('Falha ao registrar. Tente novamente.');

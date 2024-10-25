@@ -10,15 +10,20 @@ export const registerUser = async (userData) => {
     return response.data;
 };
 
-// Função para obter usuários (opcional)
+
 export const getUsers = async () => {
     const response = await api.get('/usuarios');
     return response.data;
 };
 
-// Função para fazer login do usuário
 export const loginUser = async (credentials) => {
     const response = await api.post('/usuarios/login', credentials); // ajuste a rota conforme necessário
+    return response.data;
+};
+
+// Função para enviar um novo post
+export const postData = async (postData) => {
+    const response = await api.post('/posts', postData); // ajuste a rota conforme necessário
     return response.data;
 };
 
