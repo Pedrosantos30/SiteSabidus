@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useState, useEffect } from 'react';
 
 // Criação do contexto
 const AuthContext = createContext();
@@ -11,13 +11,20 @@ export const AuthProvider = ({ children }) => {
 
     const login = (userData) => {
         setUser(userData);
-        localStorage.setItem('user', JSON.stringify(userData)); // Armazenando no localStorage
     };
 
     const logout = () => {
         setUser(null);
-        localStorage.removeItem('user'); // Removendo do localStorage
     };
+
+    // Sincroniza o localStorage sempre que 'user' muda
+    useEffect(() => {
+        if (user) {
+            localStorage.setItem('user', JSON.stringify(user)); // Armazenando no localStorage
+        } else {
+            localStorage.removeItem('user'); // Removendo do localStorage
+        }
+    }, [user]);
 
     return (
         <AuthContext.Provider value={{ user, login, logout }}>

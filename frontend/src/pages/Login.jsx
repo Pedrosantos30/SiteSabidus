@@ -1,35 +1,40 @@
-// src/pages/Login.js
 import React, { useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import axios from 'axios';
 import '@fortawesome/fontawesome-free/css/all.min.css';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
+import { loginUser } from '../service/api';
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const {user, login, logout} = useAuth();
+  const { login } = useAuth();
   const navigate = useNavigate();
+  const [error, setError] = useState(''); // Estado para armazenar a mensagem de erro
+  const [loading, setLoading] = useState(false); // Estado para controlar o carregamento
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setError(''); // Reseta a mensagem de erro antes de uma nova tentativa
     const credentials = { email, senha: password };
+    setLoading(true); // Começa a carregar
 
     try {
-      login(true);
-    
+      const response = await loginUser(credentials);
+      console.log('Resposta do servidor:', response);
 
-       // Aqui você pode armazenar os dados do usuário ou token, se necessário
-
-      // Aqui, você pode armazenar um token de autenticação, se sua API retornar um
-      // localStorage.setItem('token', response.data.token);
-
-
-
-      alert('Login bem-sucedido! Redirecionando para a página principal...');
-      navigate("/");
+      if (response) {
+        login(response);
+        navigate("/"); // Redireciona para a página principal
+      } else {
+        setError('Falha no login. Verifique suas credenciais e tente novamente.');
+      }
     } catch (error) {
       console.error('Erro ao fazer login:', error);
-      alert('Falha no login. Verifique suas credenciais e tente novamente.');
+      setError('Falha no login. Verifique suas credenciais e tente novamente.');
+    } finally {
+      setLoading(false); // Termina o carregamento
     }
   };
 
@@ -40,6 +45,13 @@ const Login = () => {
           <i className="fas fa-brain" style={styles.logoIcon}></i>
           <h1 style={styles.h1}>Sabi<span style={styles.span}>dus</span></h1>
         </div>
+        
+        {error && ( // Renderiza a mensagem de erro se existir
+          <div className="alert alert-danger" role="alert">
+            {error}
+          </div>
+        )}
+
         <form onSubmit={handleSubmit}>
           <div className="form-floating mb-3">
             <input
@@ -65,7 +77,21 @@ const Login = () => {
             />
             <label htmlFor="password">Senha</label>
           </div>
-          <button type="submit" className="btn btn-primary btn-lg" style={styles.button}>Entrar</button>
+          <button 
+            type="submit" 
+            className="btn btn-primary btn-lg" 
+            style={styles.button}
+            disabled={loading} 
+          >
+            {loading ? (
+              <span>
+                <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                Carregando...
+              </span>
+            ) : (
+              'Entrar'
+            )}
+          </button>
         </form>
         <div className="register-link" style={styles.registerLink}>
           <p>Não tem uma conta? <a href="/register" style={styles.link}>Registre-se</a></p>

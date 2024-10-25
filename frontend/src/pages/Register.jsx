@@ -13,13 +13,14 @@ function Register() {
   const [disciplina, setDisciplina] = useState('');
   const [periodo, setPeriodo] = useState('');
   const [tipoUsuario, setTipoUsuario] = useState('');
+  const [message, setMessage] = useState(''); // Estado para a mensagem
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (password !== confirmPassword) {
-      alert('As senhas não coincidem.');
+      setMessage('As senhas não coincidem.'); // Atualiza a mensagem
       return;
     }
 
@@ -35,11 +36,11 @@ function Register() {
 
     try {
       await registerUser(userData);
-      alert('Registro bem-sucedido! Redirecionando para a página de login...');
-      navigate('/login');
+      setMessage('Registro bem-sucedido! Redirecionando para a página de login...'); // Atualiza a mensagem
+      setTimeout(() => navigate('/login'), 2000); // Redireciona após 2 segundos
     } catch (error) {
       console.error('Erro ao registrar:', error);
-      alert('Falha ao registrar. Tente novamente.');
+      setMessage('Falha ao registrar. Tente novamente.'); // Atualiza a mensagem
     }
   };
 
@@ -50,6 +51,7 @@ function Register() {
           <FaBrain style={styles.logoIcon} />
           <h1 style={styles.headerTitle}>Sabi<span style={styles.headerSpan}>dus</span></h1>
         </div>
+        {message && <div className="alert alert-danger" role="alert">{message}</div>}
         <form id="register-form" onSubmit={handleSubmit}>
           <div className="form-floating mb-3">
             <input 

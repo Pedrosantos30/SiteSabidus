@@ -36,7 +36,7 @@ Content-Type: application/json
   "tipoUsuario": "aluno"
 }
 ###
-DELETE http://localhost:5000/usuarios/671abf024b6dfef0ef6eda35
+DELETE http://localhost:5000/usuarios/671b039d354c7c7bd4964d8a
 
 ###
 POST http://localhost:5000/usuarios/login

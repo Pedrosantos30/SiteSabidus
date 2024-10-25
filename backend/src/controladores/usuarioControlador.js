@@ -86,27 +86,25 @@ const loginUsuario = async (req, res) => {
   const { email, senha } = req.body;
 
   try {
-    // Tente encontrar o usuário pelo email
     const usuario = await Usuario.findOne({ email });
     if (!usuario) {
       return res.status(404).json({ message: "Usuário não encontrado." });
     }
 
-    // Verifica se a senha está correta
     const senhaValida = await bcrypt.compare(senha, usuario.senha);
     if (!senhaValida) {
       return res.status(401).json({ message: "Senha incorreta." });
     }
 
-    // Aqui você pode retornar informações do usuário ou um token, conforme sua necessidade
-    res.status(200).json({
-      message: "Login bem-sucedido.",
-      user: {
-        id: usuario._id,
-        nome: usuario.nome,
-        email: usuario.email,
-        curso: usuario.curso,
-      },
+    // Retorna dados do usuário (pode incluir informações adicionais)
+    res.status(200).json({ 
+      message: "Login bem-sucedido.", 
+      user: { 
+        id: usuario._id, 
+        nome: usuario.nome, 
+        email: usuario.email, 
+        tipoUsuario: usuario.tipoUsuario 
+      } 
     });
   } catch (error) {
     res.status(500).json({ message: "Erro no servidor.", error: error.message });
