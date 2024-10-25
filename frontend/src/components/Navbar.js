@@ -11,7 +11,7 @@ const Navbar = () => {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
 
   return (
-    <nav className="navbar navbar-expand-lg navbar-light bg-white mt-3" style={{ border: 'none', boxShadow: 'none', marginBottom: '50px' }}>
+    <nav className="navbar navbar-expand-md navbar-light bg-white mt-3" style={{ border: 'none', boxShadow: 'none', marginBottom: '50px' }}>
       <div className="container-fluid">
         {/* Logo */}
         <a className="navbar-brand" href="#" style={{ display: 'flex', alignItems: 'center' }}>
@@ -19,13 +19,13 @@ const Navbar = () => {
             icon={faBrain}
             style={{ fontSize: '2rem', color: '#3498DB', marginRight: '0.5rem' }}
           />
-          <h1 className="d-none d-lg-block" style={{ fontFamily: 'Poppins, sans-serif', fontWeight: '700', fontSize: '1.5rem', color: '#2C3E50', margin: 0 }}>
+          <h1 className="d-none d-md-block" style={{ fontFamily: 'Poppins, sans-serif', fontWeight: '700', fontSize: '1.5rem', color: '#2C3E50', margin: 0 }}>
             Sabi<span style={{ color: '#3498DB' }}>dus</span>
           </h1>
         </a>
 
         {/* Controles Mobile */}
-        <div className="d-flex align-items-center gap-3 d-lg-none">
+        <div className="d-flex align-items-center gap-3 d-md-none">
           <button
             className="btn btn-link p-1 text-dark"
             onClick={() => setIsSearchOpen(!isSearchOpen)}
@@ -68,22 +68,42 @@ const Navbar = () => {
 
         {/* Menu Desktop e Mobile */}
         <div className="collapse navbar-collapse" id="navbarNav">
-          <ul className="navbar-nav me-auto mb-2 mb-lg-0">
+          <ul className="navbar-nav me-auto mb-2 mb-md-0">
             <li className="nav-item dropdown">
-              <a className="nav-link dropdown-toggle" href="#" id="trendingTopicsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              <a 
+                className="nav-link dropdown-toggle" 
+                href="#" 
+                id="trendingTopicsDropdown" 
+                role="button" 
+                data-bs-toggle="dropdown" 
+                aria-expanded="false"
+              >
                 Tópicos em Alta
               </a>
-              <div className="dropdown-menu" aria-labelledby="trendingTopicsDropdown">
+              <div 
+                className="dropdown-menu" 
+                aria-labelledby="trendingTopicsDropdown"
+              >
                 <div className="dropdown-item">
                   <TrendingTopics />
                 </div>
               </div>
             </li>
             <li className="nav-item dropdown">
-              <a className="nav-link dropdown-toggle" href="#" id="categoriesDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              <a 
+                className="nav-link dropdown-toggle" 
+                href="#" 
+                id="categoriesDropdown" 
+                role="button" 
+                data-bs-toggle="dropdown" 
+                aria-expanded="false"
+              >
                 Categorias
               </a>
-              <ul className="dropdown-menu" aria-labelledby="categoriesDropdown">
+              <ul 
+                className="dropdown-menu" 
+                aria-labelledby="categoriesDropdown"
+              >
                 <li><a className="dropdown-item" href="#">Tecnologia</a></li>
                 <li><a className="dropdown-item" href="#">Saúde</a></li>
                 <li><a className="dropdown-item" href="#">Entretenimento</a></li>
@@ -93,8 +113,66 @@ const Navbar = () => {
             </li>
           </ul>
 
+          {/* Estilos Mobile */}
+          <style>
+            {`
+              @media (max-width: 767.98px) {
+                .navbar-collapse {
+                  text-align: center;
+                }
+                .navbar-nav {
+                  margin-left: auto !important;
+                  margin-right: auto !important;
+                }
+                .navbar-collapse .dropdown-menu {
+                  position: static !important;
+                  float: none;
+                  width: auto;
+                  margin-top: 0;
+                  background-color: transparent;
+                  border: 0;
+                  box-shadow: none;
+                  transform: none !important;
+                  left: 0 !important;
+                }
+                .navbar-collapse .dropdown-item {
+                  text-align: center;
+                  color: #000;
+                }
+                .navbar-collapse .nav-link {
+                  text-align: center;
+                  font-size: 1.1rem;
+                  padding: 0.5rem 1rem;
+                }
+                .navbar-collapse .dropdown-menu-end {
+                  position: static !important;
+                  transform: none !important;
+                }
+              }
+
+              @media (min-width: 768px) {
+                .dropdown-menu {
+                  position: absolute;
+                  float: left;
+                  margin-top: 0;
+                }
+                .dropdown-menu-end {
+                  right: 0;
+                  left: auto;
+                }
+              }
+
+             #trendingTopicsDropdown + .dropdown-menu .dropdown-item:active,
+             #trendingTopicsDropdown + .dropdown-menu .dropdown-item:focus,
+             #trendingTopicsDropdown + .dropdown-menu .dropdown-item:hover {
+             background-color: transparent !important;
+             color: inherit !important;
+          }
+            `}
+          </style>
+
           {/* Barra de Pesquisa Desktop */}
-          <form className="d-none d-lg-flex me-3" role="search">
+          <form className="d-none d-md-flex me-3" role="search">
             <input
               className="form-control me-2"
               type="search"
@@ -105,7 +183,7 @@ const Navbar = () => {
           </form>
 
           {/* Auth Section Desktop */}
-          <div className="d-none d-lg-flex">
+          <div className="d-none d-md-flex">
             {!user ? (
               <div className="d-flex gap-2">
                 <button className="btn btn-primary" onClick={() => navigate('/login')}>Login</button>
@@ -134,11 +212,11 @@ const Navbar = () => {
           </div>
 
           {/* Auth Section Mobile */}
-          <div className="d-lg-none mt-3">
+          <div className="d-md-none mt-3 text-center">
             {!user && (
-              <div className="d-flex flex-column gap-2">
-                <button className="btn btn-primary" onClick={() => navigate('/login')}>Login</button>
-                <button className="btn btn-secondary" onClick={() => navigate('/register')}>Registrar</button>
+              <div className="d-flex flex-column align-items-center gap-2">
+                <button className="btn btn-primary w-100" style={{ maxWidth: '200px' }} onClick={() => navigate('/login')}>Login</button>
+                <button className="btn btn-secondary w-100" style={{ maxWidth: '200px' }} onClick={() => navigate('/register')}>Registrar</button>
               </div>
             )}
           </div>
@@ -146,7 +224,7 @@ const Navbar = () => {
 
         {/* Barra de Pesquisa Mobile */}
         {isSearchOpen && (
-          <div className="w-100 d-lg-none mt-2">
+          <div className="w-100 d-md-none mt-2">
             <form className="d-flex" role="search">
               <input
                 className="form-control me-2"
