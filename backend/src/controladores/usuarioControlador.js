@@ -111,10 +111,28 @@ const loginUsuario = async (req, res) => {
   }
 };
 
+const obterUsuario = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const usuario = await Usuario.findById(id).select('-senha'); // Exclui a senha da resposta
+
+    if (!usuario) {
+      return res.status(404).json({ message: "Usuário não encontrado." });
+    }
+
+    res.status(200).json(usuario);
+  } catch (error) {
+    res.status(500).json({ message: "Erro ao obter usuário.", error: error.message });
+  }
+};
+
+// Exporta as funções
 module.exports = {
   criarUsuario,
   listarUsuarios,
   atualizarUsuario,
   deletarUsuario,
-  loginUsuario
+  loginUsuario,
+  obterUsuario
 };

@@ -1,26 +1,18 @@
+// src/components/TrendingTopics.js
+
 import React from 'react';
 
 const TrendingTopics = () => {
-  const trendingTopics = [
-    { id: 1, name: 'Inteligência Artificial' },
-    { id: 2, name: 'Sustentabilidade' },
-    { id: 3, name: 'Tecnologia 5G' },
-    { id: 4, name: 'Criptomoedas' },
-    { id: 5, name: 'Educação Online' },
-  ];
-
   return (
-    <div className="sidebar-card">
-      <ul className="list-group list-group-flush">
-        {trendingTopics.map(topic => (
-          <li key={topic.id} className="list-group-item">
-            <div className="trending-topic">
-              <div className="trending-icon">#{topic.id}</div>
-              <span>{topic.name}</span>
-            </div>
-          </li>
-        ))}
-      </ul>
+    <div className="card border-0 shadow-sm mb-4">
+      <div className="card-body">
+        <h5 className="card-title h6 mb-3">Trending Topics</h5>
+        <div className="d-flex flex-wrap gap-2">
+          {['#Tecnologia', '#Inovação', '#Ciência', '#Saúde', '#Educação'].map(tag => (
+            <span key={tag} className="badge bg-primary">{tag}</span>
+          ))}
+        </div>
+      </div>
     </div>
   );
 };

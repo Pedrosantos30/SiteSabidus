@@ -16,17 +16,17 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError(''); // Reseta a mensagem de erro antes de uma nova tentativa
+    setError(''); 
     const credentials = { email, senha: password };
-    setLoading(true); // Começa a carregar
+    setLoading(true);
 
     try {
       const response = await loginUser(credentials);
       console.log('Resposta do servidor:', response);
 
       if (response) {
-        login(response);
-        navigate("/"); // Redireciona para a página principal
+        login(response.user);
+        navigate("/");
       } else {
         setError('Falha no login. Verifique suas credenciais e tente novamente.');
       }
@@ -34,7 +34,7 @@ const Login = () => {
       console.error('Erro ao fazer login:', error);
       setError('Falha no login. Verifique suas credenciais e tente novamente.');
     } finally {
-      setLoading(false); // Termina o carregamento
+      setLoading(false);
     }
   };
 

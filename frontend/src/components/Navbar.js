@@ -1,243 +1,344 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect, useRef } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import TrendingTopics from './TrendingTopics';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBrain, faUserCircle, faSearch, faTimes } from '@fortawesome/free-solid-svg-icons';
+import { 
+  faSearch, 
+  faBell, 
+  faUser,
+  faSignOutAlt,
+  faCog,
+  faBrain
+} from '@fortawesome/free-solid-svg-icons';
 
 const Navbar = () => {
   const navigate = useNavigate();
   const { user, logout } = useAuth();
-  const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [showUserMenu, setShowUserMenu] = useState(false);
+  const [searchFocused, setSearchFocused] = useState(false);
+  const menuRef = useRef(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (menuRef.current && !menuRef.current.contains(event.target)) {
+        setShowUserMenu(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
+  const handleLogout = async () => {
+    try {
+      await logout();
+      navigate('/login');
+    } catch (error) {
+      console.error('Erro ao fazer logout:', error);
+    }
+  };
 
   return (
-    <nav className="navbar navbar-expand-md navbar-light bg-white mt-3" style={{ border: 'none', boxShadow: 'none', marginBottom: '50px' }}>
-      <div className="container-fluid">
-        {/* Logo */}
-        <a className="navbar-brand" href="#" style={{ display: 'flex', alignItems: 'center' }}>
-          <FontAwesomeIcon
-            icon={faBrain}
-            style={{ fontSize: '2rem', color: '#3498DB', marginRight: '0.5rem' }}
-          />
-          <h1 className="d-none d-md-block" style={{ fontFamily: 'Poppins, sans-serif', fontWeight: '700', fontSize: '1.5rem', color: '#2C3E50', margin: 0 }}>
-            Sabi<span style={{ color: '#3498DB' }}>dus</span>
-          </h1>
-        </a>
+    <>
+      <div className="navbar-spacer"></div>
 
-        {/* Controles Mobile */}
-        <div className="d-flex align-items-center gap-3 d-md-none">
+      <nav className="navbar navbar-expand-lg fixed-top">
+        <div className="container">
+          <Link className="navbar-brand d-flex align-items-center gap-2" to="/">
+            <FontAwesomeIcon
+              icon={faBrain}
+              className="logo-icon"
+              style={{ fontSize: '1.8rem' }}
+            />
+            <h1 className="d-none d-lg-inline logo-text mb-0">
+              Sabi<span className="brand-highlight">dus</span>
+            </h1>
+          </Link>
+
           <button
-            className="btn btn-link p-1 text-dark"
-            onClick={() => setIsSearchOpen(!isSearchOpen)}
-            style={{ fontSize: '1.25rem' }}
-          >
-            <FontAwesomeIcon icon={isSearchOpen ? faTimes : faSearch} />
-          </button>
-          {user && (
-            <div className="dropdown">
-              <a 
-                className="nav-link"
-                href="#" 
-                id="profileDropdownMobile" 
-                role="button" 
-                data-bs-toggle="dropdown" 
-                aria-expanded="false"
-              >
-                <FontAwesomeIcon icon={faUserCircle} style={{ fontSize: '2rem', color: '#3498DB' }} />
-              </a>
-              <ul className="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdownMobile">
-                <li><a className="dropdown-item" href="#" onClick={() => navigate('/profile')}>Meu Perfil</a></li>
-                <li><a className="dropdown-item" href="#">Configurações</a></li>
-                <li><hr className="dropdown-divider" /></li>
-                <li><a className="dropdown-item text-danger" href="#" onClick={logout}>Sair</a></li>
-              </ul>
-            </div>
-          )}
-          <button
-            className="navbar-toggler border-0"
+            className="navbar-toggler"
             type="button"
             data-bs-toggle="collapse"
-            data-bs-target="#navbarNav"
-            aria-controls="navbarNav"
-            aria-expanded="false"
-            aria-label="Toggle navigation"
+            data-bs-target="#navbarContent"
           >
             <span className="navbar-toggler-icon"></span>
           </button>
-        </div>
 
-        {/* Menu Desktop e Mobile */}
-        <div className="collapse navbar-collapse" id="navbarNav">
-          <ul className="navbar-nav me-auto mb-2 mb-md-0">
-            <li className="nav-item dropdown">
-              <a 
-                className="nav-link dropdown-toggle" 
-                href="#" 
-                id="trendingTopicsDropdown" 
-                role="button" 
-                data-bs-toggle="dropdown" 
-                aria-expanded="false"
-              >
-                Tópicos em Alta
-              </a>
-              <div 
-                className="dropdown-menu" 
-                aria-labelledby="trendingTopicsDropdown"
-              >
-                <div className="dropdown-item">
-                  <TrendingTopics />
-                </div>
+          <div className="collapse navbar-collapse" id="navbarContent">
+            <form className="d-flex mx-auto search-form">
+              <div className={`input-group ${searchFocused ? 'focused' : ''}`}>
+                <span className="input-group-text">
+                  <FontAwesomeIcon icon={faSearch} />
+                </span>
+                <input
+                  type="search"
+                  className="form-control"
+                  placeholder="Buscar no Sabidus..."
+                  onFocus={() => setSearchFocused(true)}
+                  onBlur={() => setSearchFocused(false)}
+                />
               </div>
-            </li>
-            <li className="nav-item dropdown">
-              <a 
-                className="nav-link dropdown-toggle" 
-                href="#" 
-                id="categoriesDropdown" 
-                role="button" 
-                data-bs-toggle="dropdown" 
-                aria-expanded="false"
-              >
-                Categorias
-              </a>
-              <ul 
-                className="dropdown-menu" 
-                aria-labelledby="categoriesDropdown"
-              >
-                <li><a className="dropdown-item" href="#">Tecnologia</a></li>
-                <li><a className="dropdown-item" href="#">Saúde</a></li>
-                <li><a className="dropdown-item" href="#">Entretenimento</a></li>
-                <li><a className="dropdown-item" href="#">Educação</a></li>
-                <li><a className="dropdown-item" href="#">Esportes</a></li>
-              </ul>
-            </li>
-          </ul>
-
-          {/* Estilos Mobile */}
-          <style>
-            {`
-              @media (max-width: 767.98px) {
-                .navbar-collapse {
-                  text-align: center;
-                }
-                .navbar-nav {
-                  margin-left: auto !important;
-                  margin-right: auto !important;
-                }
-                .navbar-collapse .dropdown-menu {
-                  position: static !important;
-                  float: none;
-                  width: auto;
-                  margin-top: 0;
-                  background-color: transparent;
-                  border: 0;
-                  box-shadow: none;
-                  transform: none !important;
-                  left: 0 !important;
-                }
-                .navbar-collapse .dropdown-item {
-                  text-align: center;
-                  color: #000;
-                }
-                .navbar-collapse .nav-link {
-                  text-align: center;
-                  font-size: 1.1rem;
-                  padding: 0.5rem 1rem;
-                }
-                .navbar-collapse .dropdown-menu-end {
-                  position: static !important;
-                  transform: none !important;
-                }
-              }
-
-              @media (min-width: 768px) {
-                .dropdown-menu {
-                  position: absolute;
-                  float: left;
-                  margin-top: 0;
-                }
-                .dropdown-menu-end {
-                  right: 0;
-                  left: auto;
-                }
-              }
-
-             #trendingTopicsDropdown + .dropdown-menu .dropdown-item:active,
-             #trendingTopicsDropdown + .dropdown-menu .dropdown-item:focus,
-             #trendingTopicsDropdown + .dropdown-menu .dropdown-item:hover {
-             background-color: transparent !important;
-             color: inherit !important;
-          }
-            `}
-          </style>
-
-          {/* Barra de Pesquisa Desktop */}
-          <form className="d-none d-md-flex me-3" role="search">
-            <input
-              className="form-control me-2"
-              type="search"
-              placeholder="Pesquisar"
-              aria-label="Pesquisar"
-            />
-            <button className="btn btn-primary" type="submit">Buscar</button>
-          </form>
-
-          {/* Auth Section Desktop */}
-          <div className="d-none d-md-flex">
-            {!user ? (
-              <div className="d-flex gap-2">
-                <button className="btn btn-primary" onClick={() => navigate('/login')}>Login</button>
-                <button className="btn btn-secondary" onClick={() => navigate('/register')}>Registrar</button>
-              </div>
-            ) : (
-              <div className="dropdown">
-                <a 
-                  className="nav-link dropdown-toggle"
-                  href="#" 
-                  id="profileDropdown" 
-                  role="button" 
-                  data-bs-toggle="dropdown" 
-                  aria-expanded="false"
-                >
-                  <FontAwesomeIcon icon={faUserCircle} style={{ fontSize: '2rem', color: '#3498DB' }} />
-                </a>
-                <ul className="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
-                  <li><a className="dropdown-item" href="#" onClick={() => navigate('/profile')}>Meu Perfil</a></li>
-                  <li><a className="dropdown-item" href="#">Configurações</a></li>
-                  <li><hr className="dropdown-divider" /></li>
-                  <li><a className="dropdown-item text-danger" href="#" onClick={logout}>Sair</a></li>
-                </ul>
-              </div>
-            )}
-          </div>
-
-          {/* Auth Section Mobile */}
-          <div className="d-md-none mt-3 text-center">
-            {!user && (
-              <div className="d-flex flex-column align-items-center gap-2">
-                <button className="btn btn-primary w-100" style={{ maxWidth: '200px' }} onClick={() => navigate('/login')}>Login</button>
-                <button className="btn btn-secondary w-100" style={{ maxWidth: '200px' }} onClick={() => navigate('/register')}>Registrar</button>
-              </div>
-            )}
-          </div>
-        </div>
-
-        {/* Barra de Pesquisa Mobile */}
-        {isSearchOpen && (
-          <div className="w-100 d-md-none mt-2">
-            <form className="d-flex" role="search">
-              <input
-                className="form-control me-2"
-                type="search"
-                placeholder="Pesquisar"
-                aria-label="Pesquisar"
-              />
-              <button className="btn btn-primary" type="submit">Buscar</button>
             </form>
+
+            <div className="ms-auto d-flex align-items-center gap-3">
+              {user ? (
+                <>
+                  <button className="btn btn-link text-dark position-relative notification-btn">
+                    <FontAwesomeIcon icon={faBell} size="lg" />
+                    <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                      2
+                    </span>
+                  </button>
+
+                  <div className="dropdown" ref={menuRef}>
+                    <button
+                      className="btn btn-link text-dark p-0 d-flex align-items-center gap-2"
+                      onClick={() => setShowUserMenu(!showUserMenu)}
+                    >
+                      <img
+                        src={`https://ui-avatars.com/api/?name=${user.displayName || 'User'}&background=random`}
+                        alt="Avatar"
+                        className="rounded-circle"
+                        width="32"
+                        height="32"
+                      />
+                      <span className="d-none d-lg-block">
+                        {user.displayName || user.email}
+                      </span>
+                    </button>
+
+                    <div 
+                      className={`dropdown-menu shadow ${showUserMenu ? 'show' : ''}`}
+                      style={{ position: 'absolute', right: 0, top: '100%', zIndex: 1050 }}
+                    >
+                      <Link className="dropdown-item" to="/profile">
+                        <FontAwesomeIcon icon={faUser} className="me-2" />
+                        Perfil
+                      </Link>
+                      <Link className="dropdown-item" to="/settings">
+                        <FontAwesomeIcon icon={faCog} className="me-2" />
+                        Configurações
+                      </Link>
+                      <div className="dropdown-divider"></div>
+                      <button 
+                        className="dropdown-item text-danger" 
+                        onClick={handleLogout}
+                      >
+                        <FontAwesomeIcon icon={faSignOutAlt} className="me-2" />
+                        Sair
+                      </button>
+                    </div>
+                  </div>
+                </>
+              ) : (
+                <div className="d-flex gap-2">
+                  <button
+                    className="btn btn-outline-primary"
+                    onClick={() => navigate('/login')}
+                  >
+                    Login
+                  </button>
+                  <button
+                    className="btn btn-primary"
+                    onClick={() => navigate('/register')}
+                  >
+                    Cadastre-se
+                  </button>
+                </div>
+              )}
+            </div>
           </div>
-        )}
-      </div>
-    </nav>
+        </div>
+      </nav>
+
+      <style>
+        {`
+          @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+          @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
+
+          .navbar-spacer {
+            height: 64px;
+          }
+
+          .navbar {
+            height: 64px;
+            font-family: 'Roboto', Arial, sans-serif;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(231, 231, 231, 0.8);
+            padding: 0;
+            z-index: 1040;
+          }
+
+          .navbar-brand {
+            text-decoration: none;
+          }
+
+          .logo-icon {
+            color: #3498DB;
+            margin-bottom: 0.25rem;
+          }
+
+          .logo-text {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: #2C3E50;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin: 0;
+          }
+
+          .brand-highlight {
+            color: #3498DB;
+          }
+
+          .search-form {
+            width: 100%;
+            max-width: 500px;
+            margin: 0 2rem;
+          }
+
+          .input-group {
+            transition: all 0.2s ease;
+            border-radius: 25px;
+            overflow: hidden;
+            background: #f0f2f5;
+            border: 1px solid transparent;
+          }
+
+          .input-group.focused {
+            background: white;
+            border-color: #3498DB;
+            box-shadow: 0 0 0 4px rgba(52, 152, 219, 0.1);
+          }
+
+          .input-group-text {
+            background: transparent;
+            border: none;
+            color: #6c757d;
+            padding-left: 1.25rem;
+          }
+
+          .search-form .form-control {
+            border: none;
+            padding: 0.7rem 1rem;
+            background: transparent;
+            font-size: 0.95rem;
+            height: 42px;
+          }
+
+          .search-form .form-control:focus {
+            box-shadow: none;
+          }
+
+          .notification-btn {
+            padding: 0.5rem;
+            color: #6c757d !important;
+            transition: color 0.2s ease;
+          }
+
+          .notification-btn:hover {
+            color: #3498DB !important;
+          }
+
+          .btn-primary {
+            background-color: #3498DB;
+            border-color: #3498DB;
+            padding: 0.5rem 1.25rem;
+            border-radius: 20px;
+            font-weight: 500;
+            transition: all 0.2s ease;
+          }
+
+          .btn-primary:hover {
+            background-color: #2980b9;
+            border-color: #2980b9;
+            transform: translateY(-1px);
+          }
+
+          .btn-outline-primary {
+            color: #3498DB;
+            border-color: #3498DB;
+            padding: 0.5rem 1.25rem;
+            border-radius: 20px;
+            font-weight: 500;
+            transition: all 0.2s ease;
+          }
+
+          .btn-outline-primary:hover {
+            background-color: #3498DB;
+            border-color: #3498DB;
+            transform: translateY(-1px);
+          }
+
+          .dropdown {
+            position: relative;
+            z-index: 1050;
+          }
+
+          .dropdown-menu {
+            margin-top: 0.75rem;
+            border: none;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            min-width: 220px;
+            z-index: 1050;
+          }
+
+          .dropdown-item {
+            padding: 0.7rem 1.25rem;
+            font-size: 0.95rem;
+            transition: all 0.2s ease;
+          }
+
+          .dropdown-item:hover {
+            background-color: #f8f9fa;
+          }
+
+          .dropdown-divider {
+            margin: 0.5rem 0;
+            border-top-color: #f1f1f1;
+          }
+
+          @media (max-width: 991.98px) {
+            .navbar-spacer {
+              height: 72px;
+            }
+
+            .navbar {
+              height: auto;
+              padding: 0.75rem 0;
+            }
+
+            .search-form {
+              margin: 1rem 0;
+              width: 100%;
+              max-width: 100%;
+            }
+
+            #navbarContent {
+              background: rgba(255, 255, 255, 0.95);
+              backdrop-filter: blur(10px);
+              padding: 1rem;
+              border-radius: 0 0 1rem 1rem;
+              border: 1px solid rgba(231, 231, 231, 0.8);
+              border-top: none;
+              margin: 0 -1rem;
+            }
+
+            .dropdown-menu {
+              position: absolute !important;
+              right: 0 !important;
+              left: auto !important;
+              transform: none !important;
+            }
+          }
+        `}
+      </style>
+    </>
   );
 };
 

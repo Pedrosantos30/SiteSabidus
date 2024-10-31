@@ -1,11 +1,13 @@
 const express = require("express")
-const { criarUsuario, listarUsuarios, atualizarUsuario, deletarUsuario, loginUsuario } = require("../controladores/usuarioControlador")
+const { criarUsuario, listarUsuarios, atualizarUsuario, deletarUsuario, loginUsuario, obterUsuario } = require("../controladores/usuarioControlador")
 
 const router = express.Router()
 
 router.post("/", criarUsuario)
 
 router.get("/", listarUsuarios)
+
+router.get("/:id", obterUsuario);
 
 router.put("/:id", atualizarUsuario)
 
