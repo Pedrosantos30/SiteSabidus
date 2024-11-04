@@ -1,24 +1,34 @@
-const Usuario = require("../modelos/usuarioModelo");
-const bcrypt = require("bcrypt");
+const Post = require("../modelos/postModelo")
+const Usuario = require("../modelos/usuarioModelo")
+const bcrypt = require("bcrypt")
 
 const criarUsuario = async (req, res) => {
-  const { nome, email, senha, curso, disciplina, periodo, tipoUsuario } = req.body;
+  const { nome, email, senha, curso, confirmarSenha, disciplina, periodo, tipoUsuario } = req.body
 
-  if (!nome || !email || !senha || !curso || !periodo || !tipoUsuario) {
-    return res.status(400).json({ message: "Todos os campos são obrigatórios." });
+  if (!nome || !email || !senha || !confirmarSenha || !curso || !periodo || !tipoUsuario) {
+    return res.status(400).json({ message: "Todos os campos são obrigatórios." })
+  }
+
+  if (confirmarSenha != senha) {
+    return res.status(400).json({message: "As senhas não conferem"})
+  }
+
+  if (isNaN(periodo)) {
+    return res.status(400).json({ message: "O campo 'período' deve conter um valor numérico." })
   }
 
   if (tipoUsuario === 'monitor' && !disciplina) {
-    return res.status(400).json({ message: "O monitor precisa informar uma disciplina." });
+    return res.status(400).json({ message: "O monitor precisa informar uma disciplina." })
   }
 
   try {
-    const senhaHashed = await bcrypt.hash(senha, 10);
+    const senhaHashed = await bcrypt.hash(senha, 10)
 
     const novoUsuario = new Usuario({
       nome,
       email,
       senha: senhaHashed,
+      confirmarSenha,
       curso,
       disciplina,
       periodo,
@@ -43,13 +53,17 @@ const listarUsuarios = async (req, res) => {
 
 const atualizarUsuario = async (req, res) => {
   const { id } = req.params;
-  const { nome, email, senha, curso, disciplina, periodo, tipoUsuario } = req.body;
+  const { nome, email, senha, curso, confirmarSenha, disciplina, periodo, tipoUsuario } = req.body;
+
+  const senhaHashed = await bcrypt.hash(senha, 10);
+
 
   try {
     const usuarioAtualizado = await Usuario.findByIdAndUpdate(id, {
       nome,
       email,
-      senha,
+      senha: senhaHashed,
+      confirmarSenha,
       curso,
       disciplina,
       periodo,
@@ -127,7 +141,6 @@ const obterUsuario = async (req, res) => {
   }
 };
 
-// Exporta as funções
 module.exports = {
   criarUsuario,
   listarUsuarios,

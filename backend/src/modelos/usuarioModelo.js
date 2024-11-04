@@ -32,7 +32,7 @@ const usuarioSchema = new mongoose.Schema({
     },
 
     periodo: {
-        type: String,
+        type: Number,
         required: function(){
             return this.tipoUsuario === 'aluno' || this.tipoUsuario === 'monitor'
         }

@@ -1,4 +1,4 @@
-
+// LISTAR
 GET http://localhost:5000/usuarios
 Content-Type: application/json
 
@@ -7,43 +7,62 @@ Content-Type: application/json
 
 }
 
-
+// CADASTRAR/REGISTRAR
 ###
 POST http://localhost:5000/usuarios
 Content-Type: application/json
 
 {
-  "nome": "Honey Black",
-  "email": "honeyblackout@gmail.com",
-  "senha": "melpreto",
-  "curso": "Analise e Desenvolvimente de Sistemas",
+  "nome": "",
+  "email": "",
+  "senha": "",
+  "confirmarSenha": "",
+  "curso": "",
   "disciplina": "",
-  "periodo": "3°",
-  "tipoUsuario": "aluno"
+  "periodo": ,
+  "tipoUsuario": ""
 }
 
 ###
-PUT http://localhost:5000/usuarios/67103f865e99546bc463039f
+PUT http://localhost:5000/usuarios/
 Content-Type: application/json
 
 
 {
-  "nome": "Messi Silva",
-  "email": "fifa@email.com",
-  "senha": "ladr",
-  "curso": "Sistemas para Internet",
+  "nome": "",
+  "email": "",
+  "senha": "",
+  "confirmarSenha": "",
+  "curso": "",
   "disciplina": "",
-  "periodo": "3°",
-  "tipoUsuario": "aluno"
+  "periodo": ,
+  "tipoUsuario": ""
 }
-###
-DELETE http://localhost:5000/usuarios/671c119bd73550ff1204914f
 
+// EXCLUIR USUÁRIO
+###
+DELETE http://localhost:5000/usuarios/
+
+
+// LOGAR
 ###
 POST http://localhost:5000/usuarios/login
 Content-Type: application/json
 
 {
-  "email": "lipe@email.com",
-  "senha": "lipe"
+  "email": "",
+  "senha": ""
+}
+
+// CRIAR PERGUNTAS/POSTS
+###
+POST http://localhost:5000/usuarios/posts
+Content-Type: application/json
+
+{
+  "alunoId": "67229efbdb90529a59236853", 
+  "categoria": "Educação",
+  "titulo": "Quando surgiu o maracatu ?",
+  "conteudo": "Estou em dúvida, porque ouvi falar... e queria uma resposta de alguém que curse essa área.",
+  "tags": ["Recife"] 
 }
