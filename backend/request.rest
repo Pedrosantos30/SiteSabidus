@@ -19,7 +19,7 @@ Content-Type: application/json
   "confirmarSenha": "",
   "curso": "",
   "disciplina": "",
-  "periodo": ,
+  "periodo":  ,
   "tipoUsuario": ""
 }
 
@@ -60,9 +60,65 @@ POST http://localhost:5000/usuarios/posts
 Content-Type: application/json
 
 {
-  "alunoId": "67229efbdb90529a59236853", 
-  "categoria": "Educação",
-  "titulo": "Quando surgiu o maracatu ?",
-  "conteudo": "Estou em dúvida, porque ouvi falar... e queria uma resposta de alguém que curse essa área.",
-  "tags": ["Recife"] 
+  "alunoId": "671f814e1db330c70b3adebc", 
+  "categoria": "Tecnologia",
+  "titulo": "Pessoal vocês ja tiveram aula de teste ?",
+  "conteudo": "Estou em dúvida, porque ouvi falar que um professor que chegou para substituir Jhonatan não fez um bom trabalho."
+  
 }
+
+// listando os posts
+###
+GET  http://localhost:5000/usuarios/posts/listar
+Content-Type: application/json
+
+{
+  
+}
+
+
+
+// Deletar post
+###
+DELETE http://localhost:5000/usuarios/posts/6726ee2bfda98f72580b8103
+Content-Type: application/json
+
+{
+
+}
+
+// Dar like e ao mesmo tempo remover like do post
+###
+POST http://localhost:5000/usuarios/posts/672aab97e1fd27d07519dc27/like 
+Content-Type: application/json
+
+{
+  "userId": "67241d7dca748411e52964d4"
+}
+
+
+
+// Criar comentario
+###
+POST http://localhost:5000/usuarios/posts/672aab97e1fd27d07519dc27/comentarios
+Content-Type: application/json
+
+ 
+{
+  "usuarioId": "671a63383b8c4cd56090cca6",
+  "conteudo": "Praticamente não tivemos foi horrível, uma loucura."
+}
+
+
+
+
+// Dar like e ao mesmo tempo remover like do comentario
+###
+POST http://localhost:5000/usuarios/comentario/672d804e4ed9492e433e62f0/like 
+Content-Type: application/json
+
+{
+  "userId": "67241d7dca748411e52964d4"
+}
+
+ 

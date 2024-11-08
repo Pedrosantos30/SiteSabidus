@@ -28,6 +28,7 @@ function Register() {
       nome: username,
       email,
       senha: password,
+      confirmarSenha: confirmPassword, 
       curso,
       disciplina,
       periodo,

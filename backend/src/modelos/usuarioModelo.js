@@ -42,10 +42,12 @@ const usuarioSchema = new mongoose.Schema({
         type: String,
         enum: ['aluno', 'monitor'],
         required: true
-    }
+    },
+    createdAt: Date,
+    updatedAt: Date
 
 
-},  { timestamps: true })
+})
 
 const Usuario = mongoose.model('Usuario', usuarioSchema)
 
