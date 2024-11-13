@@ -16,6 +16,7 @@ const Navbar = () => {
   const { user, logout } = useAuth();
   const [showUserMenu, setShowUserMenu] = useState(false);
   const [searchFocused, setSearchFocused] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
   const menuRef = useRef(null);
 
   useEffect(() => {
@@ -37,6 +38,18 @@ const Navbar = () => {
       navigate('/login');
     } catch (error) {
       console.error('Erro ao fazer logout:', error);
+    }
+  };
+
+  const handleSearchChange = (event) => {
+    setSearchQuery(event.target.value);
+  };
+
+  const handleSearchSubmit = (event) => {
+    event.preventDefault();
+    if (searchQuery.trim()) {
+      console.log('Buscando por:', searchQuery);
+      navigate(`/search?query=${searchQuery}`);
     }
   };
 
@@ -67,7 +80,7 @@ const Navbar = () => {
           </button>
 
           <div className="collapse navbar-collapse" id="navbarContent">
-            <form className="d-flex mx-auto search-form">
+            <form className="d-flex mx-auto search-form" onSubmit={handleSearchSubmit}>
               <div className={`input-group ${searchFocused ? 'focused' : ''}`}>
                 <span className="input-group-text">
                   <FontAwesomeIcon icon={faSearch} />
@@ -76,6 +89,8 @@ const Navbar = () => {
                   type="search"
                   className="form-control"
                   placeholder="Buscar no Sabidus..."
+                  value={searchQuery}
+                  onChange={handleSearchChange}
                   onFocus={() => setSearchFocused(true)}
                   onBlur={() => setSearchFocused(false)}
                 />
@@ -98,7 +113,7 @@ const Navbar = () => {
                       onClick={() => setShowUserMenu(!showUserMenu)}
                     >
                       <img
-                        src={`https://ui-avatars.com/api/?name=${user.displayName || 'User'}&background=random`}
+                        src={`https://ui-avatars.com/api/?name=${user.nome || 'User'}&background=random`}
                         alt="Avatar"
                         className="rounded-circle"
                         width="32"
@@ -152,6 +167,7 @@ const Navbar = () => {
           </div>
         </div>
       </nav>
+
 
       <style>
         {`

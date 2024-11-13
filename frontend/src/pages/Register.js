@@ -13,14 +13,14 @@ function Register() {
   const [disciplina, setDisciplina] = useState('');
   const [periodo, setPeriodo] = useState('');
   const [tipoUsuario, setTipoUsuario] = useState('');
-  const [message, setMessage] = useState(''); // Estado para a mensagem
+  const [message, setMessage] = useState('');
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (password !== confirmPassword) {
-      setMessage('As senhas não coincidem.'); // Atualiza a mensagem
+      setMessage('As senhas não coincidem.'); 
       return;
     }
 
@@ -37,11 +37,11 @@ function Register() {
 
     try {
       await registerUser(userData);
-      setMessage('Registro bem-sucedido! Redirecionando para a página de login...'); // Atualiza a mensagem
-      setTimeout(() => navigate('/login'), 2000); // Redireciona após 2 segundos
+      setMessage('Registro bem-sucedido! Redirecionando para a página de login...'); 
+      setTimeout(() => navigate('/login'), 2000); 
     } catch (error) {
       console.error('Erro ao registrar:', error);
-      setMessage('Falha ao registrar. Tente novamente.'); // Atualiza a mensagem
+      setMessage('Falha ao registrar. Tente novamente.'); 
     }
   };
 
