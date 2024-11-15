@@ -3,32 +3,31 @@ const Usuario = require("../modelos/usuarioModelo")
 const bcrypt = require("bcrypt")
 
 const criarUsuario = async (req, res) => {
-  const { nome, email, senha, curso, confirmarSenha, disciplina, periodo, tipoUsuario } = req.body
+  const { nome, email, senha, curso, confirmarSenha, disciplina, periodo, tipoUsuario } = req.body;
 
   if (!nome || !email || !senha || !confirmarSenha || !curso || !periodo || !tipoUsuario) {
-    return res.status(400).json({ message: "Todos os campos são obrigatórios." })
+    return res.status(400).json({ message: "Todos os campos são obrigatórios." });
   }
 
   if (confirmarSenha != senha) {
-    return res.status(400).json({message: "As senhas não conferem"})
+    return res.status(400).json({message: "As senhas não conferem"});
   }
 
   if (isNaN(periodo)) {
-    return res.status(400).json({ message: "O campo 'período' deve conter um valor numérico." })
+    return res.status(400).json({ message: "O campo 'período' deve conter um valor numérico." });
   }
 
   if (tipoUsuario === 'monitor' && !disciplina) {
-    return res.status(400).json({ message: "O monitor precisa informar uma disciplina." })
+    return res.status(400).json({ message: "O monitor precisa informar uma disciplina." });
   }
 
   try {
-    const senhaHashed = await bcrypt.hash(senha, 10)
+    const senhaHashed = await bcrypt.hash(senha, 10);
 
-    const timezoneOffset = -3 
-    const createdAt = new Date(Date.now() + timezoneOffset * 60 * 60 * 1000)
-    const updatedAt = createdAt
+    // Remover a manipulação do fuso horário. Apenas armazene a data atual.
+    const createdAt = new Date(); // A data será automaticamente em UTC
+    const updatedAt = createdAt;   // Atualizar da mesma forma.
 
- 
     const novoUsuario = new Usuario({
       nome,
       email,
@@ -44,12 +43,12 @@ const criarUsuario = async (req, res) => {
 
     await novoUsuario.save();
 
-
-    res.status(201).json({ message: "Usuário criado com sucesso!", usuario: novoUsuario })
-  }catch (error) {
-    res.status(400).json({ message: "Erro ao criar usuário.", error: error.message })
+    res.status(201).json({ message: "Usuário criado com sucesso!", usuario: novoUsuario });
+  } catch (error) {
+    res.status(400).json({ message: "Erro ao criar usuário.", error: error.message });
   }
 };
+
 
 const listarUsuarios = async (req, res) => {
   try {

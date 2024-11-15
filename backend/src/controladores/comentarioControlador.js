@@ -16,17 +16,12 @@ const criarComentario = async (req, res) => {
             return res.status(404).json({ message: "Usuário não encontrado" })
         }
 
-        const timezoneOffset = -3 
-        const createdAt = new Date(Date.now() + timezoneOffset * 60 * 60 * 1000)
-
-       
         const novoComentario = {
             usuarioId,
             nome: usuario.nome,
             conteudo,
-            createdAt,
-            updatedAt: createdAt,
             likes: []
+            // MongoDB vai gerenciar automaticamente createdAt e updatedAt
         }
         
         post.comentarios.push(novoComentario)
@@ -117,7 +112,6 @@ const likeComentario = async (req, res) => {
         res.status(500).json({ message: "Erro ao curtir comentário", error: error.message })
     }
 }
-
 
 module.exports = {
     criarComentario,

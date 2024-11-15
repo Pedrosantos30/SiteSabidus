@@ -41,7 +41,7 @@ Content-Type: application/json
 
 // EXCLUIR USUÁRIO
 ###
-DELETE http://localhost:5000/usuarios/
+DELETE http://localhost:5000/usuarios/8
 
 
 // LOGAR
@@ -80,7 +80,7 @@ Content-Type: application/json
 
 // Deletar post
 ###
-DELETE http://localhost:5000/usuarios/posts/672f8f4f7940a1d158b3c226
+DELETE http://localhost:5000/usuarios/posts/672e7ad095c5f412c4a5cb98
 Content-Type: application/json
 
 {
@@ -108,8 +108,7 @@ Content-Type: application/json
   "usuarioId": "672aa5a9f153dc4137964551",
   "conteudo": "Hoje quero é descansar, essa vida de garoto de programa não da para mim!."
 }
-
-
+//Like em Comentarios
 
 ###
 POST http://localhost:5000/usuarios/comentario/672d804e4ed9492e433e62f0/like 
@@ -119,7 +118,6 @@ Content-Type: application/json
   "userId": "67241d7dca748411e52964d4"
 }
 
-
 //Buscar Comentarios
 ###
 GET http://localhost:5000/usuarios/posts/672aab97e1fd27d07519dc27/comentarios
@@ -127,10 +125,10 @@ Content-Type: application/json
 
 //Deletar Comentario
 ###
-DELETE http://localhost:5000/usuarios/posts/6734070d4eabeb9fd7bce89a/comentarios/67342a1d8a750e514e3c5423
+DELETE http://localhost:5000/usuarios/posts/672e7ad095c5f412c4a5cb98/comentarios/672aab97e1fd27d07519dc27
 Content-Type: application/json
 
 {
-    "usuarioId": "672aa5a9f153dc4137964551"
+    "usuarioId": "671a63383b8c4cd56090cca6"
 }
  

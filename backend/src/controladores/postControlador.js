@@ -35,6 +35,7 @@ const postSchema = new Schema({
 });
 
 module.exports = mongoose.models.Post || mongoose.model('Post', postSchema);
+
 const Post = require("../modelos/postModelo");
 const Usuario = require("../modelos/usuarioModelo");
 
@@ -47,19 +48,13 @@ const criarPost = async (req, res) => {
             return res.status(400).json({ message: "Usuário não encontrado." });
         }
 
-        const timezoneOffset = -3;
-        const createdAt = new Date(Date.now() + timezoneOffset * 60 * 60 * 1000);
-        const updatedAt = createdAt;
-
         const novoPost = new Post({
             alunoId,
             nome: usuario.nome,
             categoria,
             titulo,
             conteudo,
-            likes: [], 
-            createdAt,
-            updatedAt
+            likes: []
         });
 
         await novoPost.save();
@@ -140,6 +135,7 @@ const likePost = async (req, res) => {
         res.status(500).json({ erro: "Erro ao processar like: " + erro.message });
     }
 };
+
 const listarPost = async (req, res) => {
     try {
         const posts = await Post.find()

@@ -40,13 +40,21 @@ const PostForm = () => {
       // Mensagem de sucesso
       setSuccessMessage('Publicação criada com sucesso!');
       setTitle(''); // Limpa o título
-      setContent(''); // Limpa o conteúdo
-    } catch (error) {
-      // Mensagem de erro
-      setErrorMessage('Erro ao criar publicação. Tente novamente.');
-      console.error('Erro ao enviar post:', error);
-    }
-  };
+      setContent('');
+      setTimeout(() => {
+        setSuccessMessage('');
+      }, 3000);
+       // Limpa o conteúdo
+      } catch (error) {
+        setErrorMessage('Erro ao criar publicação. Tente novamente.');
+        console.error('Erro ao enviar post:', error);
+        
+        // Remove a mensagem de erro após 3 segundos
+        setTimeout(() => {
+          setErrorMessage('');
+        }, 3000);
+      }
+    };
 
   return (
     <div className="card mb-4">

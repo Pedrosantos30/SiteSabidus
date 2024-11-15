@@ -120,7 +120,7 @@ const Navbar = () => {
                         height="32"
                       />
                       <span className="d-none d-lg-block">
-                        {user.displayName || user.email}
+                        {user.nome || user.email}
                       </span>
                     </button>
 

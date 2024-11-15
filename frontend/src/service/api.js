@@ -35,6 +35,43 @@ export const getUserById = async (id) => {
     }
 };
 
+export const likeComment = async (postId, commentId, userId) => {
+    try {
+        // Validações dos parâmetros
+        if (!postId) throw new Error('ID do post é obrigatório');
+        if (!commentId) throw new Error('ID do comentário é obrigatório');
+        if (!userId) throw new Error('ID do usuário é obrigatório');
+
+        // Sanitização dos IDs
+        const sanitizedPostId = String(postId).trim();
+        const sanitizedCommentId = String(commentId).trim();
+        const sanitizedUserId = String(userId).trim();
+
+        const response = await api.post(`/usuarios/posts/${sanitizedPostId}/comentarios/${sanitizedCommentId}/like`, {
+            usuarioId: sanitizedUserId  // Mudança aqui: usando 'usuarioId' em vez de 'userId'
+        });
+        
+        if (!response.data) {
+            throw new Error('Resposta inválida do servidor');
+        }
+        
+        console.log('Response from like comment:', response.data); // Log para debug
+        return response.data;
+    } catch (error) {
+        if (error.response) {
+            console.error('Erro do servidor:', error.response.data);
+            throw new Error(error.response.data.mensagem || 'Erro ao curtir comentário');
+        } else if (error.request) {
+            console.error('Erro de rede:', error.request);
+            throw new Error('Erro de conexão com o servidor');
+        } else {
+            console.error('Erro ao curtir comentário:', error.message);
+            throw error;
+        }
+    }
+};
+
+
 export const getUsers = async () => {
     try {
         const response = await api.get('/usuarios');
