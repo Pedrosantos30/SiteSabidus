@@ -3,7 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { addComment, deleteComment, likeComment } from '../service/api';
+import { addComment, deleteComment, likeComment, likePost } from '../service/api';
 import { 
   faHeart, 
   faComment, 
@@ -32,16 +32,16 @@ const CommentSection = ({ post, user, updatePosts, formatDate }) => {
       });
 
       const commentData = {
-        conteudo: newComment,
         usuarioId: user.id,
-        nome: user.nome
+        nome: user.nome,
+        conteudo: newComment,
+        createdAt: new Date(brasiliaDate).toISOString(),
+        likes: []
       };
 
       const tempComment = {
         ...commentData,
-        _id: `temp-${Date.now()}`,
-        createdAt: new Date(brasiliaDate).toISOString(),
-        likes: []
+        _id: `temp-${Date.now()}`
       };
 
       setLocalComments(prevComments => [tempComment, ...prevComments]);
@@ -258,16 +258,18 @@ const CommentSection = ({ post, user, updatePosts, formatDate }) => {
 };
 
 
+
 const SearchResults = () => {
   const [results, setResults] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [posts, setPosts] = useState([]);
   const [expandedComments, setExpandedComments] = useState(new Set());
   const [lastUpdate, setLastUpdate] = useState(Date.now());
   const location = useLocation();
   const navigate = useNavigate();
   const { user } = useAuth();
-  const REFRESH_INTERVAL = 10000; // 10 segundos, igual à Home
+  const REFRESH_INTERVAL = 10000; 
 
   const formatDate = useCallback((dateString) => {
     if (!dateString) return "Data inválida";
@@ -327,12 +329,11 @@ const SearchResults = () => {
     if (searchQuery) {
       performSearch(searchQuery, true);
 
-      // Configurar intervalo de atualização
+    
       const intervalId = setInterval(() => {
         performSearch(searchQuery);
       }, REFRESH_INTERVAL);
 
-      // Limpar intervalo quando o componente for desmontado
       return () => clearInterval(intervalId);
     }
   }, [location.search, performSearch]);
@@ -341,42 +342,30 @@ const SearchResults = () => {
     navigate('/');
   };
 
-  const votePost = async (postId) => {
+  const votePost = useCallback(async (postId) => {
     if (!user) {
-      alert("Você precisa estar logado para curtir um post!");
+      alert("Você precisa estar logado para votar em um post!");
       return;
     }
 
     try {
-      const response = await axios.post(
-        `http://localhost:5000/usuarios/posts/${postId}/votar`,
-        {},
-        {
-          headers: {
-            'Authorization': `Bearer ${user.token}`
-          }
+      await likePost(postId, user.id);
+      
+      setPosts(posts => posts.map(post => {
+        if (post._id === postId) {
+          const hasVoted = post.likes.includes(user.id);
+          const newLikes = hasVoted 
+            ? post.likes.filter(id => id !== user.id)
+            : [...post.likes, user.id];
+          return { ...post, likes: newLikes };
         }
-      );
-
-      if (response.status === 200) {
-        setResults(prevPosts =>
-          prevPosts.map(post =>
-            post._id === postId
-              ? {
-                  ...post,
-                  likes: post.likes?.includes(user.id)
-                    ? post.likes.filter(id => id !== user.id)
-                    : [...(post.likes || []), user.id]
-                }
-              : post
-          )
-        );
-      }
+        return post;
+      }));
     } catch (error) {
       console.error('Erro ao votar no post:', error);
-      alert('Erro ao curtir o post. Tente novamente.');
+      alert('Erro ao votar no post. Tente novamente.');
     }
-  };
+  }, [user]);
 
   const deletePost = async (postId) => {
     if (!user) {

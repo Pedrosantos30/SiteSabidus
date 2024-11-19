@@ -17,7 +17,6 @@ export const AuthProvider = ({ children }) => {
             email,
             tipoUsuario
         };
-        console.log('gabi gol', userToStore)
         setUser(userToStore);
         localStorage.setItem('user', JSON.stringify(userToStore));
     };

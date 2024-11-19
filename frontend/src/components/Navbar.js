@@ -11,7 +11,7 @@ import {
   faBrain
 } from '@fortawesome/free-solid-svg-icons';
 
-const SearchBar = ({ className }) => {
+const SearchResults = ({ className }) => {
   const navigate = useNavigate();
   const [searchFocused, setSearchFocused] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
@@ -103,7 +103,7 @@ const Navbar = () => {
           </button>
 
           <div className="collapse navbar-collapse" id="navbarContent">
-            <SearchBar className="mx-auto" />
+            <SearchResults className="mx-auto" />
 
             <div className="ms-auto d-flex align-items-center gap-3">
               {user ? (
