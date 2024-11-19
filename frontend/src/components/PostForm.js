@@ -1,16 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { postData } from '../service/api'; // Importe a função postData do api.js
+import { postData } from '../service/api';
 
 const PostForm = () => {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
-  const [category, setCategory] = useState('Tecnologia'); // Definindo uma categoria padrão
+  const [category, setCategory] = useState('Tecnologia'); 
   const [successMessage, setSuccessMessage] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
-  const [user, setUser] = useState(null); // Estado para armazenar o usuário logado
+  const [user, setUser] = useState(null);
 
   useEffect(() => {
-    // Verifica se o usuário está logado
     const storedUser = JSON.parse(localStorage.getItem('user'));
     if (storedUser) {
       setUser(storedUser);
@@ -26,30 +25,27 @@ const PostForm = () => {
     }
 
     try {
-      // Crie o objeto do post com os dados do formulário
       const postDataObj = {
-        alunoId: user.id, // Adiciona o ID do usuário logado
+        alunoId: user.id,
         titulo: title,
         conteudo: content,
         categoria: category,
       };
 
-      // Envie o post ao backend
       const response = await postData(postDataObj);
 
-      // Mensagem de sucesso
+
       setSuccessMessage('Publicação criada com sucesso!');
-      setTitle(''); // Limpa o título
+      setTitle('');
       setContent('');
       setTimeout(() => {
         setSuccessMessage('');
       }, 3000);
-       // Limpa o conteúdo
+
       } catch (error) {
         setErrorMessage('Erro ao criar publicação. Tente novamente.');
         console.error('Erro ao enviar post:', error);
-        
-        // Remove a mensagem de erro após 3 segundos
+
         setTimeout(() => {
           setErrorMessage('');
         }, 3000);

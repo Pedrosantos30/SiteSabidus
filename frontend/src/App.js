@@ -8,15 +8,17 @@ import Login from './pages/Login';
 import Profile from './pages/Profile'; // Ajuste o caminho se necessário
 import Navbar from './components/Navbar';
 import Settings from './pages/Settings';
+import SearchResults from './pages/SearchResults';
 
 
 function App() {
   return (
     <AuthProvider>
       <Router>
-      <Navbar /> {/* A Navbar ficará visível em todas as rotas */}
+      <Navbar />
         <Routes>
           <Route path='/' element={<Home />} />
+          <Route path="/search" element={<SearchResults />} />
           <Route path='/register' element={<Register />} />
           <Route path='/login' element={<Login />} />
           <Route path="/profile" element={<Profile />} />

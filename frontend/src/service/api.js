@@ -37,25 +37,23 @@ export const getUserById = async (id) => {
 
 export const likeComment = async (postId, commentId, userId) => {
     try {
-        // Validações dos parâmetros
         if (!postId) throw new Error('ID do post é obrigatório');
         if (!commentId) throw new Error('ID do comentário é obrigatório');
         if (!userId) throw new Error('ID do usuário é obrigatório');
 
-        // Sanitização dos IDs
         const sanitizedPostId = String(postId).trim();
         const sanitizedCommentId = String(commentId).trim();
         const sanitizedUserId = String(userId).trim();
 
         const response = await api.post(`/usuarios/posts/${sanitizedPostId}/comentarios/${sanitizedCommentId}/like`, {
-            usuarioId: sanitizedUserId  // Mudança aqui: usando 'usuarioId' em vez de 'userId'
+            usuarioId: sanitizedUserId  
         });
         
         if (!response.data) {
             throw new Error('Resposta inválida do servidor');
         }
         
-        console.log('Response from like comment:', response.data); // Log para debug
+        console.log('Response from like comment:', response.data); 
         return response.data;
     } catch (error) {
         if (error.response) {
@@ -70,7 +68,6 @@ export const likeComment = async (postId, commentId, userId) => {
         }
     }
 };
-
 
 export const getUsers = async () => {
     try {
@@ -94,7 +91,7 @@ export const loginUser = async (credentials) => {
 
 export const postData = async (postData) => {
     try {
-        const response = await api.post('/usuarios/posts', postData); // Ajuste a rota conforme necessário
+        const response = await api.post('/usuarios/posts', postData);
         return response.data;
     } catch (error) {
         console.error('Erro ao enviar post:', error);
@@ -187,7 +184,6 @@ export const updatePostVotes = async (postId, votes) => {
     }
 };
 
-// Função para excluir um post
 export const deletePostAPI = async (postId) => {
     try {
         const response = await api.delete(`/usuarios/posts/${postId}`);

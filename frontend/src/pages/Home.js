@@ -300,7 +300,7 @@ const Home = () => {
     setLoading(true);
     try {
       const fetchedPosts = await getPosts();
-      setPosts(fetchedPosts); // Store all posts without filtering
+      setPosts(fetchedPosts);
       setLastUpdate(Date.now());
     } catch (error) {
       console.error('Erro ao buscar posts:', error);
@@ -466,16 +466,13 @@ const Home = () => {
     }
   };
 
-  // Get filtered and sorted posts
   const getFilteredAndSortedPosts = () => {
     let filteredPosts = [...posts];
-    
-    // Apply category filter if selected
+
     if (selectedCategory) {
       filteredPosts = filteredPosts.filter(post => post.categoria === selectedCategory);
     }
     
-    // Apply sorting
     switch (sortBy) {
       case 'trending':
         return filteredPosts.sort((a, b) => b.likes.length - a.likes.length);
@@ -492,7 +489,6 @@ const Home = () => {
     setSortBy(method);
   };
 
-  // Get the posts to display
   const displayPosts = getFilteredAndSortedPosts();
 
   return (
@@ -502,60 +498,60 @@ const Home = () => {
           <div className="row justify-content-center">
             {/* Sidebar Esquerda */}
             <div className="col-lg-3 d-none d-lg-block">
-  <div className="card border-0 shadow-sm mb-4">
-    <div className="card-body">
-      <h5 className="card-title h6 mb-3">Navegação</h5>
-      <div className="list-group list-group-flush">
-        {[
-          { type: 'recent', icon: faChartSimple, label: 'Mais Recentes' },
-          { type: 'trending', icon: faFire, label: 'Em Alta' }
-        ].map(({type, icon, label}) => (
-          <button 
-            key={type}
-            className={`list-group-item list-group-item-action d-flex align-items-center gap-2 ${sortBy === type ? 'active' : ''}`}
-            onClick={() => handleSort(type)}
-          >
-            <FontAwesomeIcon icon={icon} />{label}
-          </button>
-        ))}
-      </div>
-    </div>
-  </div>
+              <div className="card border-0 shadow-sm mb-4">
+                <div className="card-body">
+                  <h5 className="card-title h6 mb-3">Navegação</h5>
+                  <div className="list-group list-group-flush">
+                    {[
+                      { type: 'recent', icon: faChartSimple, label: 'Mais Recentes' },
+                      { type: 'trending', icon: faFire, label: 'Em Alta' }
+                    ].map(({type, icon, label}) => (
+                      <button 
+                        key={type}
+                        className={`list-group-item list-group-item-action d-flex align-items-center gap-2 ${sortBy === type ? 'active' : ''}`}
+                        onClick={() => handleSort(type)}
+                      >
+                        <FontAwesomeIcon icon={icon} />{label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </div>
 
-  <div className="card border-0 shadow-sm mb-4">
-    <div className="card-body">
-      <div className="d-flex justify-content-between align-items-center mb-3">
-        <h5 className="card-title h6 mb-0">Categorias</h5>
-        {selectedCategory && (
-          <span className="badge bg-info text-dark d-flex align-items-center gap-2">
-            <FontAwesomeIcon icon={faFilter} />
-            {selectedCategory}
-            <button 
-              className="btn btn-sm p-0 border-0 text-dark"
-              onClick={() => setSelectedCategory(null)}
-            >
-              <FontAwesomeIcon icon={faTimes} />
-            </button>
-          </span>
-        )}
-      </div>
-      <div className="d-flex flex-wrap gap-2">
-        {['Tecnologia', 'Saúde', 'Educação', 'Ciência', 'Cultura'].map(category => (
-          <button 
-            key={category}
-            onClick={() => handleCategoryClick(category)}
-            className={`btn btn-sm ${selectedCategory === category ? 'btn-primary' : 'btn-light'}`}
-          >
-            {category}
-            <span className="ms-2 badge bg-white text-dark">
-              {getCategoryCount(category)}
-            </span>
-          </button>
-        ))}
-      </div>
-    </div>
-  </div>
-</div>
+                <div className="card border-0 shadow-sm mb-4">
+                  <div className="card-body">
+                    <div className="d-flex justify-content-between align-items-center mb-3">
+                      <h5 className="card-title h6 mb-0">Categorias</h5>
+                      {selectedCategory && (
+                        <span className="badge bg-light text-dark d-flex align-items-center gap-2">
+                          <FontAwesomeIcon icon={faFilter} />
+                          {selectedCategory}
+                          <button 
+                            className="btn btn-sm p-0 border-0 text-dark"
+                            onClick={() => setSelectedCategory(null)}
+                          >
+                            <FontAwesomeIcon icon={faTimes} />
+                          </button>
+                        </span>
+                      )}
+                    </div>
+                    <div className="d-flex flex-wrap gap-2">
+                      {['Tecnologia', 'Saúde', 'Educação', 'Ciência', 'Cultura'].map(category => (
+                        <button 
+                          key={category}
+                          onClick={() => handleCategoryClick(category)}
+                          className={`btn btn-sm ${selectedCategory === category ? 'btn-primary' : 'bg-light text-dark'}`}
+                        >
+                          {category}
+                          <span className="ms-2 badge bg-white text-dark">
+                            {getCategoryCount(category)}
+                          </span>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
             {/* Conteúdo Principal */}
             <div className="col-lg-6 col-md-12">
               <div className="welcome-section text-center mb-4 p-4 bg-white rounded shadow-sm">
@@ -719,6 +715,10 @@ const Home = () => {
                 min-height: calc(100vh - 56px);
                 padding-top: 1rem;
               }
+
+               .bg-light:hover {
+                background-color: #f2f3f5 !important;
+                }
 
               .welcome-section {
                 background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);

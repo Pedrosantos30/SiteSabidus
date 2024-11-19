@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import axios from 'axios';
 import '@fortawesome/fontawesome-free/css/all.min.css';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
@@ -11,8 +10,8 @@ const Login = () => {
   const [password, setPassword] = useState('');
   const { login } = useAuth();
   const navigate = useNavigate();
-  const [error, setError] = useState(''); // Estado para armazenar a mensagem de erro
-  const [loading, setLoading] = useState(false); // Estado para controlar o carregamento
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -46,7 +45,7 @@ const Login = () => {
           <h1 style={styles.h1}>Sabi<span style={styles.span}>dus</span></h1>
         </div>
         
-        {error && ( // Renderiza a mensagem de erro se existir
+        {error && (
           <div className="alert alert-danger" role="alert">
             {error}
           </div>
@@ -101,7 +100,6 @@ const Login = () => {
   );
 };
 
-// Estilos inline (seus estilos aqui)
 const styles = {
   body: {
     fontFamily: "'Roboto', Arial, sans-serif",

@@ -11,12 +11,47 @@ import {
   faBrain
 } from '@fortawesome/free-solid-svg-icons';
 
+const SearchBar = ({ className }) => {
+  const navigate = useNavigate();
+  const [searchFocused, setSearchFocused] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+
+  const handleSearchChange = (event) => {
+    setSearchQuery(event.target.value);
+  };
+
+  const handleSearchSubmit = (event) => {
+    event.preventDefault();
+    if (searchQuery.trim()) {
+      console.log('Buscando por:', searchQuery);
+      navigate(`/search?query=${searchQuery}`);
+    }
+  };
+
+  return (
+    <form className={`d-flex search-form ${className}`} onSubmit={handleSearchSubmit}>
+      <div className={`input-group ${searchFocused ? 'focused' : ''}`}>
+        <span className="input-group-text">
+          <FontAwesomeIcon icon={faSearch} />
+        </span>
+        <input
+          type="search"
+          className="form-control"
+          placeholder="Buscar no Sabidus..."
+          value={searchQuery}
+          onChange={handleSearchChange}
+          onFocus={() => setSearchFocused(true)}
+          onBlur={() => setSearchFocused(false)}
+        />
+      </div>
+    </form>
+  );
+};
+
 const Navbar = () => {
   const navigate = useNavigate();
   const { user, logout } = useAuth();
   const [showUserMenu, setShowUserMenu] = useState(false);
-  const [searchFocused, setSearchFocused] = useState(false);
-  const [searchQuery, setSearchQuery] = useState('');
   const menuRef = useRef(null);
 
   useEffect(() => {
@@ -38,18 +73,6 @@ const Navbar = () => {
       navigate('/login');
     } catch (error) {
       console.error('Erro ao fazer logout:', error);
-    }
-  };
-
-  const handleSearchChange = (event) => {
-    setSearchQuery(event.target.value);
-  };
-
-  const handleSearchSubmit = (event) => {
-    event.preventDefault();
-    if (searchQuery.trim()) {
-      console.log('Buscando por:', searchQuery);
-      navigate(`/search?query=${searchQuery}`);
     }
   };
 
@@ -80,22 +103,7 @@ const Navbar = () => {
           </button>
 
           <div className="collapse navbar-collapse" id="navbarContent">
-            <form className="d-flex mx-auto search-form" onSubmit={handleSearchSubmit}>
-              <div className={`input-group ${searchFocused ? 'focused' : ''}`}>
-                <span className="input-group-text">
-                  <FontAwesomeIcon icon={faSearch} />
-                </span>
-                <input
-                  type="search"
-                  className="form-control"
-                  placeholder="Buscar no Sabidus..."
-                  value={searchQuery}
-                  onChange={handleSearchChange}
-                  onFocus={() => setSearchFocused(true)}
-                  onBlur={() => setSearchFocused(false)}
-                />
-              </div>
-            </form>
+            <SearchBar className="mx-auto" />
 
             <div className="ms-auto d-flex align-items-center gap-3">
               {user ? (
@@ -167,7 +175,6 @@ const Navbar = () => {
           </div>
         </div>
       </nav>
-
 
       <style>
         {`
