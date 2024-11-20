@@ -4,7 +4,6 @@ import { useAuth } from '../context/AuthContext';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { 
   faSearch, 
-  faBell, 
   faUser,
   faSignOutAlt,
   faCog,
@@ -29,7 +28,7 @@ const SearchResults = ({ className }) => {
   };
 
   return (
-    <form className={`d-flex search-form ${className}`} onSubmit={handleSearchSubmit}>
+    <form className={`search-form ${className}`} onSubmit={handleSearchSubmit}>
       <div className={`input-group ${searchFocused ? 'focused' : ''}`}>
         <span className="input-group-text">
           <FontAwesomeIcon icon={faSearch} />
@@ -79,84 +78,65 @@ const Navbar = () => {
   return (
     <>
       <div className="navbar-spacer"></div>
-
       <nav className="navbar navbar-expand-lg fixed-top">
         <div className="container">
-          <Link className="navbar-brand d-flex align-items-center gap-2" to="/">
-            <FontAwesomeIcon
-              icon={faBrain}
-              className="logo-icon"
-              style={{ fontSize: '1.8rem' }}
-            />
-            <h1 className="d-none d-lg-inline logo-text mb-0">
-              Sabi<span className="brand-highlight">dus</span>
-            </h1>
-          </Link>
+          <div className="navbar-content">
+            <Link className="navbar-brand d-flex align-items-center gap-2" to="/">
+              <FontAwesomeIcon
+                icon={faBrain}
+                className="logo-icon"
+                style={{ fontSize: '1.8rem' }}
+              />
+              <h1 className="d-none d-lg-inline logo-text mb-0">
+                Sabi<span className="brand-highlight">dus</span>
+              </h1>
+            </Link>
 
-          <button
-            className="navbar-toggler"
-            type="button"
-            data-bs-toggle="collapse"
-            data-bs-target="#navbarContent"
-          >
-            <span className="navbar-toggler-icon"></span>
-          </button>
+            <SearchResults className="search-section" />
 
-          <div className="collapse navbar-collapse" id="navbarContent">
-            <SearchResults className="mx-auto" />
-
-            <div className="ms-auto d-flex align-items-center gap-3">
+            <div className="navbar-actions">
               {user ? (
-                <>
-                  <button className="btn btn-link text-dark position-relative notification-btn">
-                    <FontAwesomeIcon icon={faBell} size="lg" />
-                    <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                      2
+                <div className="dropdown" ref={menuRef}>
+                  <button
+                    className="btn btn-link text-dark p-0 d-flex align-items-center gap-2"
+                    onClick={() => setShowUserMenu(!showUserMenu)}
+                  >
+                    <img
+                      src={`https://ui-avatars.com/api/?name=${user.nome || 'User'}&background=random`}
+                      alt="Avatar"
+                      className="rounded-circle"
+                      width="32"
+                      height="32"
+                    />
+                    <span className="d-none d-lg-block">
+                      {user.nome || user.email}
                     </span>
                   </button>
 
-                  <div className="dropdown" ref={menuRef}>
-                    <button
-                      className="btn btn-link text-dark p-0 d-flex align-items-center gap-2"
-                      onClick={() => setShowUserMenu(!showUserMenu)}
+                  <div 
+                    className={`dropdown-menu shadow ${showUserMenu ? 'show' : ''}`}
+                    style={{ position: 'absolute', right: 0, top: '100%', zIndex: 1050 }}
+                  >
+                    <Link className="dropdown-item" to="/profile">
+                      <FontAwesomeIcon icon={faUser} className="me-2" />
+                      Perfil
+                    </Link>
+                    <Link className="dropdown-item" to="/settings">
+                      <FontAwesomeIcon icon={faCog} className="me-2" />
+                      Configurações
+                    </Link>
+                    <div className="dropdown-divider"></div>
+                    <button 
+                      className="dropdown-item text-danger" 
+                      onClick={handleLogout}
                     >
-                      <img
-                        src={`https://ui-avatars.com/api/?name=${user.nome || 'User'}&background=random`}
-                        alt="Avatar"
-                        className="rounded-circle"
-                        width="32"
-                        height="32"
-                      />
-                      <span className="d-none d-lg-block">
-                        {user.nome || user.email}
-                      </span>
+                      <FontAwesomeIcon icon={faSignOutAlt} className="me-2" />
+                      Sair
                     </button>
-
-                    <div 
-                      className={`dropdown-menu shadow ${showUserMenu ? 'show' : ''}`}
-                      style={{ position: 'absolute', right: 0, top: '100%', zIndex: 1050 }}
-                    >
-                      <Link className="dropdown-item" to="/profile">
-                        <FontAwesomeIcon icon={faUser} className="me-2" />
-                        Perfil
-                      </Link>
-                      <Link className="dropdown-item" to="/settings">
-                        <FontAwesomeIcon icon={faCog} className="me-2" />
-                        Configurações
-                      </Link>
-                      <div className="dropdown-divider"></div>
-                      <button 
-                        className="dropdown-item text-danger" 
-                        onClick={handleLogout}
-                      >
-                        <FontAwesomeIcon icon={faSignOutAlt} className="me-2" />
-                        Sair
-                      </button>
-                    </div>
                   </div>
-                </>
+                </div>
               ) : (
-                <div className="d-flex gap-2">
+                <div className="auth-buttons">
                   <button
                     className="btn btn-outline-primary"
                     onClick={() => navigate('/login')}
@@ -195,8 +175,29 @@ const Navbar = () => {
             z-index: 1040;
           }
 
+          .navbar-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            gap: 1rem;
+          }
+
           .navbar-brand {
+            flex-shrink: 0;
             text-decoration: none;
+          }
+
+          .search-section {
+            flex: 0 1 400px;
+            min-width: 200px;
+          }
+
+          .navbar-actions {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            flex-shrink: 0;
           }
 
           .logo-icon {
@@ -220,8 +221,6 @@ const Navbar = () => {
 
           .search-form {
             width: 100%;
-            max-width: 500px;
-            margin: 0 2rem;
           }
 
           .input-group {
@@ -257,22 +256,22 @@ const Navbar = () => {
             box-shadow: none;
           }
 
-          .notification-btn {
-            padding: 0.5rem;
-            color: #6c757d !important;
-            transition: color 0.2s ease;
+          .auth-buttons {
+            display: flex;
+            gap: 0.5rem;
           }
 
-          .notification-btn:hover {
-            color: #3498DB !important;
+          .auth-buttons .btn {
+            border-radius: 20px;
+            padding: 0.5rem 1.25rem;
+            font-weight: 500;
+            font-size: 0.875rem;
+            white-space: nowrap;
           }
 
           .btn-primary {
             background-color: #3498DB;
             border-color: #3498DB;
-            padding: 0.5rem 1.25rem;
-            border-radius: 20px;
-            font-weight: 500;
             transition: all 0.2s ease;
           }
 
@@ -285,9 +284,6 @@ const Navbar = () => {
           .btn-outline-primary {
             color: #3498DB;
             border-color: #3498DB;
-            padding: 0.5rem 1.25rem;
-            border-radius: 20px;
-            font-weight: 500;
             transition: all 0.2s ease;
           }
 
@@ -308,7 +304,6 @@ const Navbar = () => {
             border-radius: 12px;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
             min-width: 220px;
-            z-index: 1050;
           }
 
           .dropdown-item {
@@ -327,37 +322,88 @@ const Navbar = () => {
           }
 
           @media (max-width: 991.98px) {
-            .navbar-spacer {
-              height: 72px;
+            .search-section {
+              flex: 0 1 300px;
+              min-width: 150px;
             }
 
-            .navbar {
-              height: auto;
-              padding: 0.75rem 0;
+            .auth-buttons {
+              gap: 0.25rem;
             }
 
-            .search-form {
-              margin: 1rem 0;
-              width: 100%;
-              max-width: 100%;
+            .auth-buttons .btn {
+              padding: 0.375rem 0.75rem;
+              font-size: 0.875rem;
             }
 
-            #navbarContent {
-              background: rgba(255, 255, 255, 0.95);
-              backdrop-filter: blur(10px);
-              padding: 1rem;
-              border-radius: 0 0 1rem 1rem;
-              border: 1px solid rgba(231, 231, 231, 0.8);
-              border-top: none;
-              margin: 0 -1rem;
+            .input-group {
+              height: 36px;
             }
 
-            .dropdown-menu {
-              position: absolute !important;
-              right: 0 !important;
-              left: auto !important;
-              transform: none !important;
+            .search-form .form-control {
+              height: 36px;
+              padding: 0.4rem 0.75rem;
+              font-size: 0.875rem;
             }
+
+            .input-group-text {
+              padding-left: 0.75rem;
+            }
+
+            .logo-text {
+              font-size: 1.25rem;
+            }
+          }
+
+          @media (max-width: 510px) {
+          .search-section {
+            flex: 0 1 200px;
+            min-width: 120px;
+          }
+
+          .search-form .form-control {
+            font-size: 0.8rem;
+            padding: 0.5rem 0.5rem;
+          }
+
+          .input-group-text {
+            padding-left: 0.5rem;
+            padding-right: 0.25rem;
+          }
+
+          .auth-buttons .btn {
+            padding: 0.5rem 0.4rem;
+            font-size: 0.8rem;
+          }
+
+          .logo-icon {
+            font-size: 1.5rem !important;
+          }
+        }
+
+        @media (max-width: 345px) {
+          .search-section {
+            flex: 0 1 130px;
+            min-width: 70px;
+          }
+
+          .search-form .form-control {
+            font-size: 0.75rem;
+            padding: 0.5rem 0.3rem;
+          }
+
+          .auth-buttons .btn {
+            padding: 0.5rem 0.4rem;
+            font-size: 0.75rem;
+          }
+
+          .navbar-content {
+            gap: 0.5rem;
+          }
+
+          .input-group-text {
+            padding-left: 0.4rem;
+            padding-right: 0.2rem;
           }
         `}
       </style>

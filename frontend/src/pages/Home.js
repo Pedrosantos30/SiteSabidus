@@ -272,7 +272,7 @@ const Home = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [lastUpdate, setLastUpdate] = useState(Date.now());
   const [selectedCategory, setSelectedCategory] = useState(null);
-  const REFRESH_INTERVAL = 10000;
+  const REFRESH_INTERVAL = 100000;
 
   const formatDate = useCallback((dateString) => {
     if (!dateString) return "Data inválida";
@@ -560,19 +560,21 @@ const Home = () => {
                   Compartilhe conhecimento, aprenda e conecte-se com pessoas interessantes.
                 </p>
                 {!user && (
-                  <div className="mt-3">
-                    <button 
-                      className="btn btn-primary me-2"
-                      onClick={() => navigate('/login')}
-                    >
-                      Fazer Login
-                    </button>
-                    <button 
-                      className="btn btn-outline-primary"
-                      onClick={() => navigate('/register')}
-                    >
-                      Criar Conta
-                    </button>
+                  <div className="mt-3 d-flex justify-content-center">
+                    <div className="auth-buttons">
+                      <button 
+                        className="btn btn-primary"
+                        onClick={() => navigate('/login')}
+                      >
+                        Fazer Login
+                      </button>
+                      <button 
+                        className="btn btn-outline-primary"
+                        onClick={() => navigate('/register')}
+                      >
+                        Criar Conta
+                      </button>
+                    </div>
                   </div>
                 )}
               </div>
